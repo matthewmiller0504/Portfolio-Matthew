@@ -4,8 +4,9 @@
 A real-time avionics UAV system that processes asynchronous radar interrupts with strictly bounded latency, built to demonstrate deterministic hardware-in-the-loop timing for an Electronics Test Engineer role.
 
 ## Demo
-- **Video:** <Link to your YouTube/Wokwi video once recorded>
-- **Live Wokwi:** <Link to your Wokwi project>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/l8eNz9xy0MY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+- **Live Wokwi:** [Run the Simulation Live](https://wokwi.com/projects/471075299108365313)
 
 ## Architecture
 This system utilizes a strictly decoupled Top-Half / Bottom-Half architecture to handle asynchronous hardware interrupts. 
