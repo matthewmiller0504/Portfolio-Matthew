@@ -14,15 +14,7 @@ This system utilizes a strictly decoupled Top-Half / Bottom-Half architecture to
 2. **Bottom-Half (FreeRTOS Task):** The ISR uses a Direct Task Notification (`vTaskNotifyGiveFromISR`) combined with a forced context switch (`portYIELD_FROM_ISR`) to instantly wake a Priority 12 task. This task handles the heavier processing (e.g., logging and beacon updates) with a proven, bounded wake-up latency of 2242 µs, ensuring deterministic timing even under heavy background load.
 
 ## Tasks & timing (WCET evidence)
-| Task | Period T | WCET C | U=C/T | Priority | Deadline |
-|------|----------|--------|-------|----------|----------|
-| `load_task_a` (Math churn) | 10 ms | 1.2 ms | 0.120 | 15 | 10 ms |
-| `load_task_b` (FIR Filter) | 20 ms | 3.0 ms | 0.150 | 10 | 20 ms |
-| `load_task_c` (CRC-32) | 50 ms | 2.5 ms | 0.050 | 5 | 50 ms |
-| `load_task_d` (Insertion Sort) | 100 ms | 6.0 ms | 0.060 | 2 | 100 ms |
-| `btn_task_notif` (Radar/Beacon) | Sporadic | 2.2 ms | N/A | 12 | Soft |
-
-**Total utilization U = 0.380** (RM bound feasible. Schedulable under Rate-Monotonic parameters.)
+![Task Table and WCET Calculator](task-table.png)
 
 ## Hazard analysis & standard mapping
 - **Hazard:** The system fails to process a hardware interrupt (radar pulse) before the next pulse arrives.
