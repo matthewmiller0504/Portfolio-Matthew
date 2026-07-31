@@ -43,3 +43,15 @@ If the system experiences a CPU overload (e.g., background noise tasks exceed th
 ## Tailored for
 **Electronics Test Engineer** 
 This architecture was chosen to demonstrate the strict determinism required for aerospace testing. Automated Hardware-in-the-Loop (HIL) test fixtures are themselves hard real-time systems. Relying on background polling or poorly structured interrupts can introduce tick-aligned jitter, leading to false-fail states on valid flight hardware. By manually managing task priorities, explicit yields, and worst-case execution bounds, this project highlights the exact troubleshooting and design skills necessary to build reliable test equipment.
+
+## FINAL REFLECTION
+Project: A real-time avionics UAV system that processes asynchronous radar interrupts with strictly bounded latency, built to demonstrate deterministic hardware-in-the-loop timing for an Electronics Test Engineer role.
+
+## What I would do differently
+If I were to rebuild this capstone, I would revisit my initial signaling approach and default entirely to Direct Task Notifications over Binary Semaphores much earlier in the development process. Initially, I assumed standard semaphores were sufficient for interrupt signaling, but empirical testing proved they introduced unnecessary microsecond latency overhead (nearly 600 µs slower in my idle tests). Additionally, I would transition this project from the Wokwi simulator to a physical ESP32-S3 board sooner to observe real-world hardware bounce and measure physical signal jitter using an external oscilloscope, as simulated environments can sometimes mask raw, physical hardware constraints.
+
+## What was harder than expected
+The hardest part of this project was diagnosing non-crashing timing bugs, specifically the tick-aligned jitter that occurs when the RTOS scheduler isn't explicitly commanded. When I intentionally removed the portYIELD_FROM_ISR macro, the system didn't crash or throw a syntax error; it just silently broke the deterministic constraints. Tracking down why a high-priority task was occasionally stranded for 10 full milliseconds required me to stop looking at standard code execution and start analyzing the underlying FreeRTOS system tick timestamps. It was a steep learning curve to realize that in real-time systems, managing the invisible OS scheduler is just as critical as managing the hardware itself.
+
+## The most valuable thing I learned
+The most valuable lesson I will carry into my interviews for Electronics Test Engineer roles is the fundamental difference between a "fast" system and a "deterministic" one. I now deeply understand that in aerospace Hardware-in-the-Loop (HIL) testing, an unpredictable microsecond delay can falsely invalidate perfectly good flight hardware. Learning how to mathematically guarantee worst-case execution times (WCET) using Rate-Monotonic boundaries, and strictly separating urgent hardware tasks (Top-Half) from deferred processing (Bottom-Half), has completely reshaped how I write and review safety-critical software.
